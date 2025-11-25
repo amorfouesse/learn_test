@@ -1,4 +1,6 @@
 {
   "hello": "Hello",
-  "welcome": "Welcome {name}"
+  "welcome": "Welcome {name}",
+  "switchLanguage": "Switch Lang",
+  "namePlaceholder": "Type your name"
 }

@@ -14,10 +14,10 @@ const changeLanguage = () => {
     <div class="greeting-card">
         <h1>{{ t('welcome', { name: userStore.name }) }}</h1>
 
-        <button @click="changeLanguage" data-test="lang-btn">
-            Switch Lang
+        <button @click="changeLanguage">
+            {{ t('switchLanguage') }}
         </button>
 
-        <input v-model="userStore.name" data-test="name-input" placeholder="Tape ton nom" />
+        <input v-model="userStore.name" :placeholder="t('namePlaceholder')" />
     </div>
 </template>

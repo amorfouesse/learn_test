@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { i18n } from '@/i18n'
+import { setupI18n } from '@/i18n'
+import { render } from 'vitest-browser-vue'
+import { page } from 'vitest/browser'
 import Home from '@/views/Home.vue'
 
 describe('Home', () => {
@@ -10,39 +11,32 @@ describe('Home', () => {
     setActivePinia(createPinia())
   })
 
-  it('affiche le message de bienvenue correct par défaut (Pinia + I18n)', () => {
-    const wrapper = mount(Home, {
+  const renderComponent = () => {
+    return render(Home, {
       global: {
-        plugins: [createPinia(), i18n],
+        plugins: [createPinia(), setupI18n()],
       },
     })
+  }
+  it('affiche le message de bienvenue par défaut', async () => {
+    renderComponent()
 
-    expect(wrapper.text()).toContain('Bienvenue Visiteur')
+    expect(page.getByRole('heading', { name: /bienvenue visiteur/i })).toBeVisible()
   })
 
   it('met à jour le texte quand on change la langue', async () => {
-    const wrapper = mount(Home, {
-      global: { plugins: [createPinia(), i18n] },
-    })
+    renderComponent()
 
-    // 1. ACTION : On clique sur le bouton (trigger est asynchrone)
-    await wrapper.find('[data-test="lang-btn"]').trigger('click')
+    await page.getByRole('button', { name: /changer de langue/i }).click()
 
-    // 2. ASSERTION : Le texte doit être passé en anglais
-    expect(wrapper.text()).toContain('Welcome Visiteur')
+    expect(page.getByRole('heading', { name: /welcome visiteur/i })).toBeVisible()
   })
 
   it("met à jour le message quand le store Pinia change via l'input", async () => {
-    const wrapper = mount(Home, {
-      global: { plugins: [createPinia(), i18n] },
-    })
+    renderComponent()
 
-    const input = wrapper.find('[data-test="name-input"]')
+    await page.getByPlaceholder(/tape ton nom/i).fill('Sophie')
 
-    // 1. ACTION : On simule une écriture dans l'input
-    await input.setValue('Sophie')
-
-    // 2. ASSERTION : Le titre doit s'être mis à jour réactivement
-    expect(wrapper.find('h1').text()).toBe('Bienvenue Sophie')
+    expect(page.getByRole('heading', { name: /bienvenue Sophie/i })).toBeVisible()
   })
 })

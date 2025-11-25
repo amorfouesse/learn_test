@@ -1,4 +1,6 @@
 {
   "hello": "Bonjour",
-  "welcome": "Bienvenue {name}"
+  "welcome": "Bienvenue {name}",
+  "switchLanguage": "Changer de langue",
+  "namePlaceholder": "Tape ton nom"
 }
